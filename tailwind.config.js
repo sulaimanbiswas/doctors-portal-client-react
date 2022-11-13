@@ -2,28 +2,26 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "banner-pattern": "url('/src/assets/images/bg.png')",
+        appointment: "url('/src/assets/images/appointment.png')",
+        footer: "url('/src/assets/images/footer.png')",
+      },
+    },
   },
   daisyui: {
     themes: [
       {
         doctor: {
           primary: "#3A4256",
-
           secondary: "#19D3AE",
-
           accent: "#0FCFEC",
-
           neutral: "#191D24",
-
           "base-100": "#FFFFFF",
-
           info: "#3ABFF8",
-
           success: "#36D399",
-
           warning: "#FBBD23",
-
           error: "#F87272",
         },
       },
