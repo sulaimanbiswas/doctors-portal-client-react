@@ -6,45 +6,36 @@ const Footer = () => {
     <footer className="bg-footer bg-cover bg-no-repeat text-primary">
       <div className="footer p-10 ">
         <div>
-          <span className="footer-title">Services</span>
+          <span className="footer-title">SERVICES</span>
           <Link to="" className="link link-hover">
-            Branding
+            Emergency Checkup
           </Link>
           <Link to="" className="link link-hover">
-            Design
+            Monthly Checkup
           </Link>
           <Link to="" className="link link-hover">
-            Marketing
+            Weekly Checkup
           </Link>
           <Link to="" className="link link-hover">
-            Advertisement
-          </Link>
-        </div>
-        <div>
-          <span className="footer-title">Company</span>
-          <Link to="" className="link link-hover">
-            About us
-          </Link>
-          <Link to="" className="link link-hover">
-            Contact
-          </Link>
-          <Link to="" className="link link-hover">
-            Jobs
-          </Link>
-          <Link to="" className="link link-hover">
-            Press kit
+            Deep Checkup
           </Link>
         </div>
         <div>
-          <span className="footer-title">Legal</span>
+          <span className="footer-title">ORAL HEALTH</span>
           <Link to="" className="link link-hover">
-            Terms of use
+            Fluoride Treatment
           </Link>
           <Link to="" className="link link-hover">
-            Privacy policy
+            Cavity Filling
           </Link>
           <Link to="" className="link link-hover">
-            Cookie policy
+            Teeth Whitening
+          </Link>
+        </div>
+        <div>
+          <span className="footer-title">OUR ADDRESS</span>
+          <Link to="" className="link link-hover">
+            New York - 101010 Hudson
           </Link>
         </div>
       </div>
