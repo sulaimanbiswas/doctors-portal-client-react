@@ -3,55 +3,83 @@ import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
-import { MdAlternateEmail, MdRemoveRedEye } from "react-icons/md";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { MdAlternateEmail, MdPerson, MdRemoveRedEye } from "react-icons/md";
+import { Link } from "react-router-dom";
 import SecondaryButton from "../../components/SecondaryButton/SecondaryButton";
 import { AuthContext } from "../../contexts/AuthProvider";
 
 const provider = new GoogleAuthProvider();
 
-const Login = () => {
-  const { login, providerSignUpAndLogin } = useContext(AuthContext);
+const SignUp = () => {
+  const { signUp, providerSignUpAndLogin, validationUser, updateUser } =
+    useContext(AuthContext);
   const [showPass, setShowPass] = useState(true);
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  let navigate = useNavigate();
-  let location = useLocation();
-  let from = location.state?.from?.pathname || "/";
 
-  const loginHandle = (data) => {
-    const { email, password } = data;
-    login(email, password)
+  const signUpHandle = (data) => {
+    const { name, email, password } = data;
+
+    const userInfo = {
+      displayName: name,
+    };
+
+    signUp(email, password)
       .then(() => {
-        toast.success("Successfully login");
-        navigate(from, { replace: true });
+        updateUser(userInfo)
+          .then(() => {})
+          .catch((error) => {
+            toast.error(error.message);
+          });
+        validationUser()
+          .then(() => {
+            toast.success("Please check your email to verify your account");
+          })
+          .catch((error) => {
+            toast.error(error.message);
+          });
       })
       .catch((error) => {
         toast.error(error.message);
       });
   };
-
   const googleLoginHandler = () => {
     providerSignUpAndLogin(provider)
       .then(() => {
-        toast.success("Successfully login");
-        navigate(from, { replace: true });
+        toast.success("Successfully signup");
       })
       .catch((error) => {
         toast.error(error.message);
       });
   };
+
   return (
     <div className=" min-h-screen mx-auto flex justify-center items-center  ">
       <div className="w-full md:w-[385px] shadow-lg p-7 rounded-2xl flex flex-col">
-        <h2 className="font-normal text-xl text-center">Login</h2>
+        <h2 className="font-normal text-xl text-center">Sign up</h2>
         <form
-          onSubmit={handleSubmit(loginHandle)}
+          onSubmit={handleSubmit(signUpHandle)}
           className="flex flex-col gap-3"
         >
+          <div className="form-control w-full max-w-xs">
+            <label className="label">
+              <span className="label-text">Name</span>
+            </label>
+            <div className="relative">
+              <input
+                {...register("name", { required: "this is a required" })}
+                type="text"
+                className="input input-bordered w-full"
+              />
+              <MdPerson className="absolute bottom-1/3 right-3" />
+            </div>
+            {errors.name && (
+              <p className="text-error">{errors.name?.message}</p>
+            )}
+          </div>
           <div className="form-control w-full max-w-xs">
             <label className="label">
               <span className="label-text">Email</span>
@@ -59,17 +87,20 @@ const Login = () => {
             <div className="relative">
               <input
                 {...register("email", {
-                  required: "Email Address is required",
+                  required: "this is a required",
+                  pattern: {
+                    value:
+                      /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                    message: "Invalid email address",
+                  },
                 })}
                 type="email"
-                className="  input input-bordered w-full"
+                className="input input-bordered w-full"
               />
               <MdAlternateEmail className="absolute bottom-1/3 right-3" />
             </div>
             {errors.email && (
-              <p className="text-error" role="alert">
-                {errors.email?.message}
-              </p>
+              <p className="text-error">{errors.email?.message}</p>
             )}
           </div>
           <div className="form-control w-full max-w-xs">
@@ -79,10 +110,11 @@ const Login = () => {
             <div className="relative">
               <input
                 {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be 6 characters or longer",
+                  required: "this is a required",
+                  pattern: {
+                    value:
+                      /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8}/,
+                    message: "Password must be Strong",
                   },
                 })}
                 type={showPass ? "password" : "text"}
@@ -94,26 +126,24 @@ const Login = () => {
               />
             </div>
             {errors.password && (
-              <p className="text-error" role="alert">
-                {errors.password?.message}
-              </p>
+              <p className="text-error">{errors.password?.message}</p>
             )}
             <label className="label">
-              <Link to="/forgot" className="label-text-alt link link-hover">
+              <Link to="#" className="label-text-alt link link-hover">
                 Forgot password?
               </Link>
             </label>
           </div>
-          <SecondaryButton>Login</SecondaryButton>
+          <SecondaryButton>Signup</SecondaryButton>
         </form>
         <div className="">
           <label className="label justify-center gap-1">
-            <p className="label-text-alt ">New to Doctors Portal?</p>
+            <p className="label-text-alt ">Already have an account?</p>
             <Link
-              to="/signup"
+              to="/login"
               className="label-text-alt link no-underline link-hover link-secondary"
             >
-              Register now
+              Login now
             </Link>
           </label>
         </div>
@@ -130,4 +160,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;

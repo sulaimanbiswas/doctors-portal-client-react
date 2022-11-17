@@ -1,14 +1,39 @@
-import React from "react";
+import React, { useContext } from "react";
+import toast from "react-hot-toast";
+import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { ImHome } from "react-icons/im";
 import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthProvider";
 
 const Header = () => {
+  const { user, logOut } = useContext(AuthContext);
+
+  const logOutHandler = () => {
+    logOut()
+      .then(() => {
+        toast.success("Successfully Sign Out");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+
+
   const menu = (
     <>
-      <li className="">
-        <NavLink to="/" className="rounded-lg">
-          Home
-        </NavLink>
-      </li>
+      {!user?.uid ? (
+        <li className="">
+          <NavLink to="/" className="rounded-lg">
+            <ImHome /> Home
+          </NavLink>
+        </li>
+      ) : (
+        <li>
+          <NavLink to="/dashboard" className="rounded-lg">
+            Dashboard
+          </NavLink>
+        </li>
+      )}
       <li>
         <NavLink to="/about" className="rounded-lg">
           About
@@ -29,11 +54,25 @@ const Header = () => {
           Contact Us
         </NavLink>
       </li>
-      <li>
-        <NavLink to="/login" className="rounded-lg">
-          Login
-        </NavLink>
-      </li>
+
+      {user?.uid ? (
+        <>
+          <li>
+            <button
+              onClick={logOutHandler}
+              className="rounded-lg flex items-center justify-center"
+            >
+              Sign Out <FaSignOutAlt className="text-lg" />
+            </button>
+          </li>
+        </>
+      ) : (
+        <li>
+          <NavLink to="/login" className="rounded-lg">
+            Login <FaSignInAlt className="text-lg" />
+          </NavLink>
+        </li>
+      )}
     </>
   );
   return (

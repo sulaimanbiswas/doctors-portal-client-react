@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../../../contexts/AuthProvider";
 
 const BookingModal = ({ treatment, setTreatment, date }) => {
   const { name, slots } = treatment;
+  const { user } = useContext(AuthContext);
 
   const handleBooking = (event) => {
     event.preventDefault();
@@ -62,6 +64,7 @@ const BookingModal = ({ treatment, setTreatment, date }) => {
             </select>
             <input
               required
+              defaultValue={user && user.displayName}
               name="displayName"
               type="text"
               placeholder="Full Name"
@@ -70,6 +73,7 @@ const BookingModal = ({ treatment, setTreatment, date }) => {
             <input
               required
               name="phone"
+              defaultValue={user && user.phone}
               type="text"
               placeholder="Phone Number"
               className="input input-bordered w-full"
@@ -77,6 +81,7 @@ const BookingModal = ({ treatment, setTreatment, date }) => {
             <input
               required
               name="email"
+              defaultValue={user && user.email}
               type="email"
               placeholder="Email"
               className="input input-bordered w-full"
