@@ -5,7 +5,7 @@ import { ImHome } from "react-icons/im";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider";
 
-const Header = () => {
+const HeaderAdmin = () => {
   const { user, logOut, dark, setDark } = useContext(AuthContext);
 
   const logOutHandler = () => {
@@ -113,6 +113,26 @@ const Header = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal p-0 gap-2">{menu}</ul>
       </div>
+      <label
+        htmlFor="menu-toggle-btn"
+        tabIndex={2}
+        className="btn btn-ghost lg:hidden"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M4 6h16M4 12h8m-8 6h16"
+          />
+        </svg>
+      </label>
       <label className="swap swap-rotate">
         <input type="checkbox" onClick={darkHandler} />
         <svg
@@ -134,4 +154,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HeaderAdmin;

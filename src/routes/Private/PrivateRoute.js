@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import Loading from "../../components/Loading/Loading";
 import { AuthContext } from "../../contexts/AuthProvider";
 
 const PrivateRoute = ({ children }) => {
@@ -7,11 +8,7 @@ const PrivateRoute = ({ children }) => {
   let location = useLocation();
 
   if (loading) {
-    return (
-      <div className="w-screen h-screen flex justify-center items-center">
-        <progress className="progress w-56"></progress>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (!user?.uid) {

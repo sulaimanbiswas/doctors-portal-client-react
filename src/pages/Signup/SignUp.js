@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import { MdAlternateEmail, MdPerson, MdRemoveRedEye } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SecondaryButton from "../../components/SecondaryButton/SecondaryButton";
 import { AuthContext } from "../../contexts/AuthProvider";
 
@@ -19,6 +19,7 @@ const SignUp = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
+  const navigate = useNavigate();
 
   const signUpHandle = (data) => {
     const { name, email, password } = data;
@@ -37,6 +38,7 @@ const SignUp = () => {
         validationUser()
           .then(() => {
             toast.success("Please check your email to verify your account");
+            navigate("/login");
           })
           .catch((error) => {
             toast.error(error.message);

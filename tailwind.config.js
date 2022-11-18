@@ -12,6 +12,7 @@ module.exports = {
   },
   daisyui: {
     themes: [
+      "dark",
       {
         doctor: {
           primary: "#3A4256",

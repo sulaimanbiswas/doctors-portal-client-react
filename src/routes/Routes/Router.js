@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "../../admin/Dashboard/Dashboard";
+import MyAppointments from "../../admin/MyAppointments/MyAppointments";
 import Admin from "../../layouts/Admin";
 import Main from "../../layouts/Main";
 import Appointment from "../../pages/Appointment/Appointment";
@@ -11,6 +12,7 @@ import PrivateRoute from "../Private/PrivateRoute";
 
 const router = createBrowserRouter([
   {
+    path: "/",
     element: <Main />,
     children: [
       {
@@ -36,15 +38,20 @@ const router = createBrowserRouter([
     ],
   },
   {
-    element: <Admin />,
+    path: "/admin",
+    element: (
+      <PrivateRoute>
+        <Admin />
+      </PrivateRoute>
+    ),
     children: [
       {
-        path: "/dashboard",
-        element: (
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        ),
+        path: "/admin/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/admin/my-appointments",
+        element: <MyAppointments />,
       },
     ],
   },
