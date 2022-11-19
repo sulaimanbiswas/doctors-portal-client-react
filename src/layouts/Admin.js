@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, Outlet } from "react-router-dom";
 import HeaderAdmin from "../components/Header/HeaderAdmin";
+import { AuthContext } from "../contexts/AuthProvider";
+import useAdmin from "../hooks/useAdmin";
 
 const Admin = () => {
+  const { user } = useContext(AuthContext);
+  const [isAdmin] = useAdmin(user?.email);
   return (
     <div>
       <HeaderAdmin />
@@ -17,6 +21,7 @@ const Admin = () => {
           <ul className="menu p-4 w-80 bg-base-100 text-base-content">
             <li>
               <Link to="/admin/my-appointments">My Appointments</Link>
+              {isAdmin && <Link to="/admin/users">All Users</Link>}
             </li>
           </ul>
         </div>

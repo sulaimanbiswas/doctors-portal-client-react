@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   getAuth,
   onAuthStateChanged,
   sendEmailVerification,
@@ -53,6 +54,10 @@ const AuthProvider = ({ children }) => {
     return updateProfile(auth.currentUser, userInfo);
   };
 
+  const userDelete = () => {
+    deleteUser(auth.currentUser);
+  };
+
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
@@ -78,6 +83,7 @@ const AuthProvider = ({ children }) => {
     forgotPassword,
     validationUser,
     updateUser,
+    userDelete,
     logOut,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

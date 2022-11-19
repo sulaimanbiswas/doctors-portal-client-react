@@ -7,6 +7,7 @@ import { MdAlternateEmail, MdPerson, MdRemoveRedEye } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import SecondaryButton from "../../components/SecondaryButton/SecondaryButton";
 import { AuthContext } from "../../contexts/AuthProvider";
+import useToken from "../../hooks/useToken";
 
 const provider = new GoogleAuthProvider();
 
@@ -19,7 +20,13 @@ const SignUp = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
+  const [createUserEmail, setCreateUserEmail] = useState("");
+  const [token] = useToken(createUserEmail);
   const navigate = useNavigate();
+
+  if (token) {
+    navigate("/");
+  }
 
   const signUpHandle = (data) => {
     const { name, email, password } = data;
@@ -31,14 +38,15 @@ const SignUp = () => {
     signUp(email, password)
       .then(() => {
         updateUser(userInfo)
-          .then(() => {})
-          .catch((error) => {
-            toast.error(error.message);
-          });
-        validationUser()
           .then(() => {
-            toast.success("Please check your email to verify your account");
-            navigate("/login");
+            validationUser()
+              .then(() => {
+                saveUser(name, email);
+                toast.success("Please check your email to verify your account");
+              })
+              .catch((error) => {
+                toast.error(error.message);
+              });
           })
           .catch((error) => {
             toast.error(error.message);
@@ -55,6 +63,21 @@ const SignUp = () => {
       })
       .catch((error) => {
         toast.error(error.message);
+      });
+  };
+
+  const saveUser = (name, email) => {
+    const user = { name, email };
+    fetch("http://localhost:5000/users", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setCreateUserEmail(email);
       });
   };
 

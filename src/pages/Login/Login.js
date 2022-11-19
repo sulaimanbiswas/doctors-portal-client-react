@@ -7,6 +7,7 @@ import { MdAlternateEmail, MdRemoveRedEye } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import SecondaryButton from "../../components/SecondaryButton/SecondaryButton";
 import { AuthContext } from "../../contexts/AuthProvider";
+import useToken from "../../hooks/useToken";
 
 const provider = new GoogleAuthProvider();
 
@@ -18,16 +19,24 @@ const Login = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
+
+  const [loginUserEmail, setLoginUserEmail] = useState("");
+  const [token] = useToken(loginUserEmail);
+
   let navigate = useNavigate();
   let location = useLocation();
   let from = location.state?.from?.pathname || "/";
+
+  if (token) {
+    navigate(from, { replace: true });
+  }
 
   const loginHandle = (data) => {
     const { email, password } = data;
     login(email, password)
       .then(() => {
+        setLoginUserEmail(email);
         toast.success("Successfully login");
-        navigate(from, { replace: true });
       })
       .catch((error) => {
         toast.error(error.message);
