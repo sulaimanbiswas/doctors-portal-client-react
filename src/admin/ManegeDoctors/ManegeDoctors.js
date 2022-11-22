@@ -2,34 +2,37 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
+import Loading from "../../components/Loading/Loading";
 
-const AllUsers = () => {
-  const [deletingUser, setDeletingUser] = useState(null);
-  const { data: users, refetch } = useQuery({
-    queryKey: ["users"],
+const ManegeDoctors = () => {
+  const [deletingDoctor, setDeletingDoctor] = useState(null);
+  const {
+    data: doctors,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["doctor"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:5000/users");
-      const data = await res.json();
-      return data;
+      try {
+        const res = await fetch("http://localhost:5000/doctors", {
+          headers: {
+            authorization: `bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
+        const data = res.json();
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
-  const makeAdminHandle = (id) => {
-    fetch(`http://localhost:5000/users/admin/${id}`, {
-      method: "PUT",
-      headers: {
-        authorization: `bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.matchedCount > 0) {
-          refetch();
-          toast.success("Make admin successfully");
-        }
-      });
-  };
-  const userDeleteHandle = (user) => {
-    fetch(`http://localhost:5000/users/admin/${user._id}`, {
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  const deleteHandle = (doctor) => {
+    fetch(`http://localhost:5000/doctors/${doctor._id}`, {
       method: "DELETE",
       headers: {
         authorization: `bearer ${localStorage.getItem("accessToken")}`,
@@ -46,13 +49,15 @@ const AllUsers = () => {
   };
 
   const closeModal = () => {
-    setDeletingUser(null);
+    setDeletingDoctor(null);
   };
+
   return (
     <div className="p-14">
       <div className="">
         <h3 className="text-2xl">
-          Total User: {users?.length > 9 ? users?.length : "0" + users?.length}
+          Total Doctors:{" "}
+          {doctors?.length > 9 ? doctors?.length : "0" + doctors?.length}
         </h3>
       </div>
       <div className="mt-6">
@@ -61,37 +66,38 @@ const AllUsers = () => {
             {/* <!-- head --> */}
             <thead>
               <tr>
-                <th></th>
+                <th>#</th>
+                <th>Avatar</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Admin</th>
+                <th>Specialty</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {/* <!-- row 1 --> */}
-              {users &&
-                users.map((user, index) => (
-                  <tr key={user._id}>
+              {doctors.length > 0 &&
+                doctors.map((doctor, index) => (
+                  <tr key={doctor._id}>
                     <th>{index + 1}</th>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>
-                      {user?.role ? (
-                        "Admin"
-                      ) : (
-                        <button
-                          onClick={() => makeAdminHandle(user._id)}
-                          className="btn btn-sm btn-primary"
-                        >
-                          Make Admin
-                        </button>
-                      )}
-                    </td>
+                    <th>
+                      <div className="avatar">
+                        <div className="mask mask-squircle w-12 h-12">
+                          <img
+                            src={doctor.img}
+                            alt="Avatar Tailwind CSS Component"
+                          />
+                        </div>
+                      </div>
+                    </th>
+                    <td>{doctor.name}</td>
+                    <td>{doctor.email}</td>
+                    <td>{doctor.specialty}</td>
+
                     <td>
                       <label
                         htmlFor="confirmation-modal"
-                        onClick={() => setDeletingUser(user)}
+                        onClick={() => setDeletingDoctor(doctor)}
                         className="btn btn-md btn-circle btn-error btn-outline"
                       >
                         <svg
@@ -116,13 +122,13 @@ const AllUsers = () => {
           </table>
         </div>
       </div>
-      {deletingUser && (
+      {deletingDoctor && (
         <ConfirmationModal
-          title={`Ate you sure to delete ${deletingUser.name}`}
-          message={`If you delete ${deletingUser.name}. You cannot recover it`}
-          modalData={deletingUser}
+          title={`Are you sure to delete ${deletingDoctor.name}?`}
+          message={`If you delete ${deletingDoctor.name}. It cannot be undone.`}
+          modalData={deletingDoctor}
           closeModal={closeModal}
-          successAction={userDeleteHandle}
+          successAction={deleteHandle}
           successColor="btn-error"
         />
       )}
@@ -130,4 +136,4 @@ const AllUsers = () => {
   );
 };
 
-export default AllUsers;
+export default ManegeDoctors;
