@@ -14,11 +14,14 @@ const ManegeDoctors = () => {
     queryKey: ["doctor"],
     queryFn: async () => {
       try {
-        const res = await fetch("http://localhost:5000/doctors", {
-          headers: {
-            authorization: `bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
+        const res = await fetch(
+          "https://doctors-portal-server-coral.vercel.app/doctors",
+          {
+            headers: {
+              authorization: `bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
         const data = res.json();
         return data;
       } catch (error) {
@@ -32,12 +35,15 @@ const ManegeDoctors = () => {
   }
 
   const deleteHandle = (doctor) => {
-    fetch(`http://localhost:5000/doctors/${doctor._id}`, {
-      method: "DELETE",
-      headers: {
-        authorization: `bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
+    fetch(
+      `https://doctors-portal-server-coral.vercel.app/doctors/${doctor._id}`,
+      {
+        method: "DELETE",
+        headers: {
+          authorization: `bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

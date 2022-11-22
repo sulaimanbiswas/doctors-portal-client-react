@@ -8,13 +8,15 @@ const AllUsers = () => {
   const { data: users, refetch } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:5000/users");
+      const res = await fetch(
+        "https://doctors-portal-server-coral.vercel.app/users"
+      );
       const data = await res.json();
       return data;
     },
   });
   const makeAdminHandle = (id) => {
-    fetch(`http://localhost:5000/users/admin/${id}`, {
+    fetch(`https://doctors-portal-server-coral.vercel.app/users/admin/${id}`, {
       method: "PUT",
       headers: {
         authorization: `bearer ${localStorage.getItem("accessToken")}`,
@@ -29,12 +31,15 @@ const AllUsers = () => {
       });
   };
   const userDeleteHandle = (user) => {
-    fetch(`http://localhost:5000/users/admin/${user._id}`, {
-      method: "DELETE",
-      headers: {
-        authorization: `bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
+    fetch(
+      `https://doctors-portal-server-coral.vercel.app/users/admin/${user._id}`,
+      {
+        method: "DELETE",
+        headers: {
+          authorization: `bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
