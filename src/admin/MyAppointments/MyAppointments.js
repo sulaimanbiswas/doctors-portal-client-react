@@ -10,7 +10,7 @@ const MyAppointments = () => {
     queryKey: ["bookings", user?.email],
     queryFn: async () => {
       const res = await fetch(
-        `https://doctors-portal-server-coral.vercel.app/bookings?email=${user?.email}`,
+        `http://localhost:5000/bookings?email=${user?.email}`,
         {
           headers: {
             authorization: `bearer ${localStorage.getItem("accessToken")}`,

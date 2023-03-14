@@ -17,9 +17,9 @@ const AvailableAppointment = ({ selectedDate }) => {
   } = useQuery({
     queryKey: ["appointmentOptions", date],
     queryFn: () =>
-      fetch(
-        `https://doctors-portal-server-coral.vercel.app/appointmentOptions?date=${date}`
-      ).then((res) => res.json()),
+      fetch(`http://localhost:5000/appointmentOptions?date=${date}`).then(
+        (res) => res.json()
+      ),
   });
 
   if (isLoading) {
